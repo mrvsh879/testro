@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Інтерактивний тест — Франція та TotalEnergies</title>
+  <title>Інтерактивний тест — Румунія та OMV Petrom</title>
   <style>
     :root { --bg:#0b0f19; --panel:#121829; --text:#e6e9f2; --muted:#9aa3b2; --brand:#6ea8fe; --brand-2:#22d3ee; --border:#1f2a44; }
     *{box-sizing:border-box}
@@ -62,8 +62,8 @@
     .warning{background:rgba(255,255,255,.03);border:1px dashed var(--border);padding:10px 12px;border-radius:12px;margin-top:10px;font-size:13px;color:var(--muted)}
     .actions{display:flex;gap:10px;align-items:center;margin:10px 0 0}
   </style>
+  <!-- Вход через Google (необязательно). Оставь как есть или удали блоки ниже. -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -102,48 +102,48 @@
   </div>
 
   <script>
-    // ====== НАЛАШТУВАННЯ ТЕСТУ (адаптовано під Францію та TotalEnergies) ======
+    // ====== НАЛАШТУВАННЯ ТЕСТУ (Румунія та OMV Petrom) ======
     const QUIZ = {
-      title: "Тест про Францію та TotalEnergies (10 питань)",
+      title: "Тест про Румунію та OMV Petrom (10 питань)",
       durationMin: 20,
       // заміни за потреби своїм вебхуком (Google Apps Script / інше):
       webhookUrl: "https://script.google.com/macros/s/AKfycbz0ZKCEcUj6tMBIvp33L0QFlZMZ8u4R4floJi9FiIwGYOABVLt7zuf_hu50UMYAgcOJ/exec",
 
-      // Ключ правильних відповідей (0-базові індекси) — 10 питань:
-      // 1: Макрон; 2: Габріель Атталь; 3: Патрік Пуянне; 4: 1924; 5: ~150 млрд €;
-      // 6: Париж; 7: 5 континентів; 8: Євронекст Париж; 9: Євро; 10: Париж.
+      // Ключ правильних відповідей (0-базові індекси) — важливо: довжина = кількості питань.
+      // 1: Клаус Йоганніс; 2: Марчел Чолаку; 3: Крістіна Верчере; 4: 1956; 5: ~6 млрд €;
+      // 6: Бухарест; 7: Австрія (OMV AG); 8: Бухарестська біржа; 9: Румунський лей; 10: Бухарест.
       answerKey: [0,0,0,0,0,0,0,0,0,0],
 
       questions: [
-        { type:'single', text:'Хто є чинним президентом Франції?', options:[
-          'Емманюель Макрон','Марін Ле Пен','Франсуа Олланд','Ніколя Саркозі'
+        { type:'single', text:'Хто є президентом Румунії (контекст тесту)?', options:[
+          'Клаус Йоганніс','Іон Ілієску','Еміль Константінеску','Траян Бесеску'
         ]},
-        { type:'single', text:'Хто обіймає посаду прем’єр-міністра Франції станом на 2025 рік?', options:[
-          'Габріель Атталь','Елізабет Борн','Жан Кастекс','Мануель Вальс'
+        { type:'single', text:'Хто очолює Уряд Румунії (прем’єр-міністр) у контексті цього тесту?', options:[
+          'Марчел Чолаку','Людовік Орбан','Дачіан Чолош','Ніколае Чуке'
         ]},
-        { type:'single', text:'Хто є генеральним директором компанії TotalEnergies?', options:[
-          'Патрік Пуянне','Бернар Арно','Жан-Поль Агнон','Мішель Ландрі'
+        { type:'single', text:'Хто є генеральним директором компанії OMV Petrom?', options:[
+          'Крістіна Верчере','Райнер Зеле','Альфред Штерн','Іліе Сірбу'
         ]},
-        { type:'single', text:'У якому році була заснована компанія TotalEnergies (первісна Total)?', options:[
-          '1924','1945','1970','1983'
+        { type:'single', text:'У якому році (як Petrom) було засновано основу OMV Petrom?', options:[
+          '1956','1991','1997','2004'
         ]},
-        { type:'single', text:'Яка орієнтовна ринкова капіталізація компанії TotalEnergies у 2024 році?', options:[
-          'Близько 150 мільярдів євро','Близько 50 мільярдів євро','Близько 500 мільярдів євро','Менше 10 мільярдів євро'
+        { type:'single', text:'Яка орієнтовна ринкова капіталізація OMV Petrom у 2024 році?', options:[
+          'Близько 6 мільярдів євро','Менше 1 мільярда євро','Близько 60 мільярдів євро','Понад 100 мільярдів євро'
         ]},
-        { type:'single', text:'Де розташована штаб-квартира компанії TotalEnergies?', options:[
-          'Париж','Ліон','Марсель','Брюссель'
+        { type:'single', text:'Де розташована штаб-квартира OMV Petrom?', options:[
+          'Бухарест','Відень','Клуж-Напока','Констанца'
         ]},
-        { type:'single', text:'На скільки континентах веде діяльність компанія TotalEnergies?', options:[
-          '5','3','2','1'
+        { type:'single', text:'Яка країна через OMV AG є основним акціонером OMV Petrom?', options:[
+          'Австрія','Румунія','Німеччина','Франція'
         ]},
-        { type:'single', text:'На якій біржі котируються акції TotalEnergies?', options:[
-          'Євронекст Париж','Нью-Йоркська біржа','Лондонська біржа','Франкфуртська біржа'
+        { type:'single', text:'На якій біржі котируються акції OMV Petrom?', options:[
+          'Бухарестська фондова біржа','Віденська біржа','Нью-Йоркська біржа','Лондонська біржа'
         ]},
-        { type:'single', text:'Яка є офіційна валюта Франції?', options:[
-          'Євро','Франк','Долар','Ліра'
+        { type:'single', text:'Яка офіційна валюта Румунії?', options:[
+          'Румунський лей','Євро','Долар США','Швейцарський франк'
         ]},
-        { type:'single', text:'Яке місто є столицею Франції?', options:[
-          'Париж','Марсель','Ліон','Бордо'
+        { type:'single', text:'Яке місто є столицею Румунії?', options:[
+          'Бухарест','Ясси','Тімішоара','Клуж-Напока'
         ]}
       ]
     };
@@ -245,11 +245,7 @@
       const block = document.createElement('div');
       const h = document.createElement('h2'); h.className='q-title'; h.textContent = q.text; block.appendChild(h);
       const note = document.createElement('div'); note.className='q-note muted';
-      note.textContent =
-        q.type==='match' ? 'Перетягніть картки праворуч у відповідні слоти ліворуч' :
-        q.type==='order' ? 'Перетягніть пункти, щоб виставити порядок' :
-        q.type==='multiple' ? 'Можна обрати кілька варіантів' :
-        'Оберіть один варіант';
+      note.textContent = (q.type==='multiple') ? 'Можна обрати кілька варіантів' : 'Оберіть один варіант';
       block.appendChild(note);
 
       const options = document.createElement('div'); options.className='options';
@@ -262,11 +258,6 @@
           const span=document.createElement('span'); span.textContent=opt;
           label.appendChild(input); label.appendChild(span); options.appendChild(label);
         });
-      }
-      if(q.type==='order'){
-        const list = document.createElement('div'); list.id='orderList'; list.className='options';
-        q.items.forEach(txt=>{ const d=document.createElement('div'); d.className='draggable'; d.textContent=txt; list.appendChild(d); });
-        options.appendChild(list); new Sortable(list,{animation:150});
       }
 
       block.appendChild(options); stage.appendChild(block);
@@ -289,13 +280,6 @@
         const sel = options.querySelector('input:checked'); picked = sel ? [ +sel.value ] : [];
       } else if(q.type==='multiple'){
         picked = [...options.querySelectorAll('input:checked')].map(i=>+i.value);
-      } else if(q.type==='order'){
-        picked = Array.from(options.querySelectorAll('#orderList .draggable')).map(el=>el.textContent);
-      } else if(q.type==='match'){
-        picked = {}; options.querySelectorAll('.slot').forEach(slot=>{
-          const l=slot.getAttribute('data-left'); const it=slot.querySelector('.draggable');
-          picked[l] = it ? it.getAttribute('data-right') : '';
-        });
       }
 
       const record = { index: originalIndex, shownOrder: idx, type: q.type, picked };
@@ -399,8 +383,6 @@
             valueIndexes: arr, valueNumbers1: arr.map(i=>i+1),
             valueLetters: arr.map(i=>alpha[i]), valueTexts: arr.map(i=>q.options[i]||'') };
         }
-        if(rec.type==='order'){ return { idByOriginal, idByOrder, type:'order', value:rec.picked }; }
-        if(rec.type==='match'){ return { idByOriginal, idByOrder, type:'match', value:rec.picked }; }
         return { idByOriginal, idByOrder, type:rec.type, value:rec.picked };
       });
 
