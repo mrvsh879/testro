@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Інтерактивний тест — Франція та TotalEnergies</title>
+  <style>
+    :root { --bg:#0b0f19; --panel:#121829; --text:#e6e9f2; --muted:#9aa3b2; --brand:#6ea8fe; --brand-2:#22d3ee; --border:#1f2a44; }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(34,211,238,.08), transparent),
+        radial-gradient(1200px 600px at 90% 110%, rgba(110,168,254,.08), transparent),
+        var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      line-height:1.6
+    }
+    .wrap{max-width:900px;margin:40px auto;padding:24px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));
+      border:1px solid var(--border);
+      backdrop-filter:blur(8px);
+      border-radius:18px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+      overflow:hidden
+    }
+    header{padding:22px 22px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    h1{font-size:22px;margin:0;letter-spacing:.2px}
+    .muted{color:var(--muted);font-size:14px}
+    .progress{width:100%;height:8px;background:#0e1526;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin:8px 0 0}
+    .progress>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+    .body{padding:22px}
+    .q-title{font-size:20px;font-weight:700;margin:0 0 8px}
+    .q-note{margin:0 0 16px;color:var(--muted)}
+    .options{display:grid;gap:12px}
+    .opt{border:1px solid var(--border);border-radius:14px;padding:14px;background:#0e1526;display:flex;align-items:center;gap:12px}
+    .opt input{width:18px;height:18px;accent-color:var(--brand)}
+    .btn{
+      appearance:none;border:1px solid var(--border);color:var(--text);
+      background:linear-gradient(180deg,#1a2340,#15203b);
+      padding:12px 16px;border-radius:12px;cursor:pointer;font-weight:600;transition:opacity .2s ease
+    }
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+    .footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+    .hidden{display:none !important}
+    .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+    .kpi{text-align:center;padding:14px;border:1px solid var(--border);border-radius:12px;background:#0e1526}
+    .kpi b{font-size:20px;display:block}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+    .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+    .pill.ok{background:rgba(34,197,94,.15);color:#86efac}
+    .pill.bad{background:rgba(239,68,68,.15);color:#fca5a5}
+    .status{margin-left:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:#0e1526;font-size:12px}
+    .status.ok{color:#86efac;border-color:rgba(34,197,94,.35)}
+    .status.err{color:#fca5a5;border-color:rgba(239,68,68,.35)}
+    .timer{margin-left:auto;font-weight:700}
+    .email-badge{margin-left:auto;background:#0e1526;border:1px solid var(--border);padding:6px 10px;border-radius:999px;font-size:12px}
+    .signin-wrap{display:flex;align-items:center;gap:12px}
+    .warning{background:rgba(255,255,255,.03);border:1px dashed var(--border);padding:10px 12px;border-radius:12px;margin-top:10px;font-size:13px;color:var(--muted)}
+    .actions{display:flex;gap:10px;align-items:center;margin:10px 0 0}
+  </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="app">
+      <header>
+        <div>
+          <h1>Інтерактивний тест</h1>
+          <div class="muted">Вхід через Google або вкажіть робочу пошту. 20 хвилин на проходження. Перезапуск заборонено.</div>
+          <div class="progress"><i id="bar"></i></div>
+        </div>
+        <div id="userBlock" class="signin-wrap">
+          <div id="g_id_onload"
+               data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+               data-callback="handleCredentialResponse"
+               data-auto_prompt="false"></div>
+          <div class="g_id_signin" data-type="standard" data-size="medium" data-shape="pill" data-theme="outline" data-logo_alignment="left"></div>
+          <div class="fld" id="manualEmail">
+            <input id="emailInput" type="email" placeholder="ваша_пошта@company.com" />
+            <button class="btn" id="startBtn">Старт</button>
+          </div>
+          <span id="emailBadge" class="email-badge hidden"></span>
+          <span id="timer" class="timer hidden">20:00</span>
+        </div>
+      </header>
+
+      <div class="body" id="stage"></div>
+
+      <div class="footer">
+        <div class="muted" id="status">Питання 1 із N</div>
+        <div>
+          <button class="btn" id="restartBtn" title="Скидання заборонено" disabled>Скинути</button>
+          <button class="btn" id="nextBtn" disabled>Далі →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== НАЛАШТУВАННЯ ТЕСТУ (адаптовано під Францію та TotalEnergies) ======
+    const QUIZ = {
+      title: "Тест про Францію та TotalEnergies (10 питань)",
+      durationMin: 20,
+      // заміни за потреби своїм вебхуком (Google Apps Script / інше):
+      webhookUrl: "https://script.google.com/macros/s/AKfycbz0ZKCEcUj6tMBIvp33L0QFlZMZ8u4R4floJi9FiIwGYOABVLt7zuf_hu50UMYAgcOJ/exec",
+
+      // Ключ правильних відповідей (0-базові індекси) — 10 питань:
+      // 1: Макрон; 2: Габріель Атталь; 3: Патрік Пуянне; 4: 1924; 5: ~150 млрд €;
+      // 6: Париж; 7: 5 континентів; 8: Євронекст Париж; 9: Євро; 10: Париж.
+      answerKey: [0,0,0,0,0,0,0,0,0,0],
+
+      questions: [
+        { type:'single', text:'Хто є чинним президентом Франції?', options:[
+          'Емманюель Макрон','Марін Ле Пен','Франсуа Олланд','Ніколя Саркозі'
+        ]},
+        { type:'single', text:'Хто обіймає посаду прем’єр-міністра Франції станом на 2025 рік?', options:[
+          'Габріель Атталь','Елізабет Борн','Жан Кастекс','Мануель Вальс'
+        ]},
+        { type:'single', text:'Хто є генеральним директором компанії TotalEnergies?', options:[
+          'Патрік Пуянне','Бернар Арно','Жан-Поль Агнон','Мішель Ландрі'
+        ]},
+        { type:'single', text:'У якому році була заснована компанія TotalEnergies (первісна Total)?', options:[
+          '1924','1945','1970','1983'
+        ]},
+        { type:'single', text:'Яка орієнтовна ринкова капіталізація компанії TotalEnergies у 2024 році?', options:[
+          'Близько 150 мільярдів євро','Близько 50 мільярдів євро','Близько 500 мільярдів євро','Менше 10 мільярдів євро'
+        ]},
+        { type:'single', text:'Де розташована штаб-квартира компанії TotalEnergies?', options:[
+          'Париж','Ліон','Марсель','Брюссель'
+        ]},
+        { type:'single', text:'На скільки континентах веде діяльність компанія TotalEnergies?', options:[
+          '5','3','2','1'
+        ]},
+        { type:'single', text:'На якій біржі котируються акції TotalEnergies?', options:[
+          'Євронекст Париж','Нью-Йоркська біржа','Лондонська біржа','Франкфуртська біржа'
+        ]},
+        { type:'single', text:'Яка є офіційна валюта Франції?', options:[
+          'Євро','Франк','Долар','Ліра'
+        ]},
+        { type:'single', text:'Яке місто є столицею Франції?', options:[
+          'Париж','Марсель','Ліон','Бордо'
+        ]}
+      ]
+    };
+
+    // ====== Глобал/DOM ======
+    const stage = document.getElementById('stage');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const statusEl = document.getElementById('status');
+    const bar = document.getElementById('bar');
+    const emailBadge = document.getElementById('emailBadge');
+    const timerEl = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const emailInput = document.getElementById('emailInput');
+    const LS = { email:'quiz_user_email', end:'quiz_end_ts', idx:'quiz_idx', data:'quiz_answers', start:'quiz_start_ts' };
+
+    let order = [...Array(QUIZ.questions.length).keys()];
+    let idx = 0;
+    let answers = [];
+
+    // ====== Вхід ======
+    window.handleCredentialResponse = function(res){
+      try { const payload = parseJwt(res.credential); const email = payload.email; if(!email) throw new Error(); lockAndStart(email); }
+      catch(e){ alert('Помилка входу через Google. Можна вказати пошту вручну.'); }
+    };
+    function parseJwt (token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    startBtn.addEventListener('click', () => {
+      const email = (emailInput.value||'').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { alert('Укажіть коректну робочу пошту'); return; }
+      lockAndStart(email);
+    });
+
+    function lockAndStart(email){
+      const existingEmail = localStorage.getItem(LS.email);
+      const endTs = +localStorage.getItem(LS.end) || 0;
+      const now = Date.now();
+      if(existingEmail && endTs && now < endTs && existingEmail !== email){
+        alert('Тест вже запущено під іншим аккаунтом і не може бути скинуто до завершення часу.');
+        return;
+      }
+      localStorage.setItem(LS.email, email);
+      emailBadge.textContent = email; emailBadge.classList.remove('hidden');
+      document.querySelector('.g_id_signin')?.classList.add('hidden');
+      document.getElementById('manualEmail')?.classList.add('hidden');
+
+      if(!localStorage.getItem(LS.end)){
+        const end = now + QUIZ.durationMin*60*1000;
+        localStorage.setItem(LS.end, String(end));
+        localStorage.setItem(LS.start, String(now));
+        localStorage.setItem(LS.idx, '0');
+        localStorage.setItem(LS.data, JSON.stringify([]));
+      }
+      idx = +(localStorage.getItem(LS.idx) || '0');
+      answers = JSON.parse(localStorage.getItem(LS.data) || '[]');
+      timerEl.classList.remove('hidden');
+      tickTimer();
+      render();
+    }
+
+    (function bootstrap(){
+      const email = localStorage.getItem(LS.email);
+      const endTs = +localStorage.getItem(LS.end) || 0;
+      if(email && endTs){
+        emailBadge.textContent = email; emailBadge.classList.remove('hidden');
+        document.querySelector('.g_id_signin')?.classList.add('hidden');
+        document.getElementById('manualEmail')?.classList.add('hidden');
+        timerEl.classList.remove('hidden');
+        idx = +(localStorage.getItem(LS.idx) || '0');
+        answers = JSON.parse(localStorage.getItem(LS.data) || '[]');
+        tickTimer();
+        render();
+      } else {
+        stage.innerHTML = '<div class="warning">Увійдіть через Google або вкажіть робочу пошту, щоб почати. Після старту таймер запуститься на 20 хвилин, а скидання буде недоступне.</div>';
+        statusEl.textContent = 'Авторизуйтеся, щоб почати';
+      }
+    })();
+
+    function updateProgress(){
+      const total = order.length;
+      statusEl.textContent = `Питання ${Math.min(idx+1,total)} із ${total}`;
+      bar.style.width = `${(idx/total)*100}%`;
+    }
+
+    function render(){
+      updateProgress();
+      nextBtn.disabled = true;
+      stage.innerHTML = '';
+      if(idx >= order.length){ return renderResult(); }
+
+      const qOriginalIndex = order[idx];
+      const q = QUIZ.questions[qOriginalIndex];
+
+      const block = document.createElement('div');
+      const h = document.createElement('h2'); h.className='q-title'; h.textContent = q.text; block.appendChild(h);
+      const note = document.createElement('div'); note.className='q-note muted';
+      note.textContent =
+        q.type==='match' ? 'Перетягніть картки праворуч у відповідні слоти ліворуч' :
+        q.type==='order' ? 'Перетягніть пункти, щоб виставити порядок' :
+        q.type==='multiple' ? 'Можна обрати кілька варіантів' :
+        'Оберіть один варіант';
+      block.appendChild(note);
+
+      const options = document.createElement('div'); options.className='options';
+
+      if(q.type==='single' || q.type==='multiple'){
+        const isMulti = q.type==='multiple';
+        q.options.forEach((opt,i)=>{
+          const label=document.createElement('label'); label.className='opt';
+          const input=document.createElement('input'); input.type=isMulti?'checkbox':'radio'; input.name='q'; input.value=i;
+          const span=document.createElement('span'); span.textContent=opt;
+          label.appendChild(input); label.appendChild(span); options.appendChild(label);
+        });
+      }
+      if(q.type==='order'){
+        const list = document.createElement('div'); list.id='orderList'; list.className='options';
+        q.items.forEach(txt=>{ const d=document.createElement('div'); d.className='draggable'; d.textContent=txt; list.appendChild(d); });
+        options.appendChild(list); new Sortable(list,{animation:150});
+      }
+
+      block.appendChild(options); stage.appendChild(block);
+
+      if(q.type==='single'){
+        options.addEventListener('change', ()=>{ nextBtn.disabled = !options.querySelector('input:checked'); });
+      } else if(q.type==='multiple'){
+        options.addEventListener('change', ()=>{ nextBtn.disabled = options.querySelectorAll('input:checked').length === 0; });
+      } else {
+        nextBtn.disabled = false;
+      }
+
+      nextBtn.onclick = () => saveAndNext(qOriginalIndex, q, options);
+      restartBtn.onclick = () => {};
+    }
+
+    function saveAndNext(originalIndex, q, options){
+      let picked;
+      if(q.type==='single'){
+        const sel = options.querySelector('input:checked'); picked = sel ? [ +sel.value ] : [];
+      } else if(q.type==='multiple'){
+        picked = [...options.querySelectorAll('input:checked')].map(i=>+i.value);
+      } else if(q.type==='order'){
+        picked = Array.from(options.querySelectorAll('#orderList .draggable')).map(el=>el.textContent);
+      } else if(q.type==='match'){
+        picked = {}; options.querySelectorAll('.slot').forEach(slot=>{
+          const l=slot.getAttribute('data-left'); const it=slot.querySelector('.draggable');
+          picked[l] = it ? it.getAttribute('data-right') : '';
+        });
+      }
+
+      const record = { index: originalIndex, shownOrder: idx, type: q.type, picked };
+      answers[idx] = record;
+      localStorage.setItem(LS.data, JSON.stringify(answers));
+      idx++; localStorage.setItem(LS.idx, String(idx));
+      render();
+    }
+
+    async function renderResult(){
+      bar.style.width = '100%';
+      const payload = buildPayload();
+
+      // 1) Локальна перевірка — показуємо результат одразу
+      const local = localCheck(payload);
+
+      stage.innerHTML = `
+        <h2>Підсумок</h2>
+        <div class="kpis">
+          <div class="kpi"><b id="score">${local.total}/${QUIZ.questions.length}</b><div class="muted">Балів</div></div>
+          <div class="kpi"><b id="pct">${local.percent}%</b><div class="muted">Відсоток</div></div>
+          <div class="kpi"><b>${timeTaken()}</b><div class="muted">Час</div></div>
+        </div>
+        <div class="actions">
+          <div class="muted" id="sendStatus"><span class="status">Надсилання…</span></div>
+          <button class="btn" id="retryBtn">Повторити відправку</button>
+        </div>
+        <table class="table"><thead><tr><th>#</th><th>Питання</th><th>Статус</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="warning">Тест заблоковано — перезапуск неможливий до завершення таймера.</div>`;
+
+      const rows = document.getElementById('rows');
+      local.breakdown.forEach((b,i)=>{ 
+        const tr=document.createElement('tr'); 
+        tr.innerHTML=`<td>${i+1}</td><td>${b.id}</td><td>${b.ok?'<span class="pill ok">вірно</span>':'<span class="pill bad">помилка</span>'}</td>`;
+        rows.appendChild(tr); 
+      });
+
+      // 2) Відправка на сервер (у фоні)
+      const sendStatus = document.querySelector('#sendStatus .status');
+      const trySend = async () => {
+        sendStatus.className = 'status';
+        sendStatus.textContent = 'Надсилання…';
+        try {
+          const data = await sendToWebhook(payload);
+          sendStatus.classList.add('ok');
+          sendStatus.textContent = 'Надіслано організатору';
+          if(typeof data?.total === 'number' && typeof data?.percent === 'number'){
+            document.getElementById('score').textContent = `${data.total}/${QUIZ.questions.length}`;
+            document.getElementById('pct').textContent = `${data.percent}%`;
+          }
+        } catch (e) {
+          sendStatus.classList.add('err');
+          sendStatus.textContent = 'Не надіслано (офлайн/помилка).';
+        }
+      };
+      document.getElementById('retryBtn').onclick = trySend;
+      trySend();
+    }
+
+    async function sendToWebhook(payload){
+      const controller = new AbortController();
+      const t = setTimeout(()=>controller.abort(), 8000);
+      const rsp = await fetch(QUIZ.webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(t);
+      if(!rsp.ok) throw new Error('HTTP '+rsp.status);
+      return await rsp.json();
+    }
+
+    function buildPayload(){
+      const email = localStorage.getItem(LS.email);
+      const startedAt = +localStorage.getItem(LS.start) || Date.now();
+      const finishedAt = Date.now();
+      const alpha = ['a','b','c','d','e','f'];
+
+      const orderMap = {};
+      const reverseOrderMap = {};
+      answers.forEach(rec => { orderMap[rec.shownOrder] = rec.index; reverseOrderMap[rec.index] = rec.shownOrder; });
+
+      const normalized = answers.map((rec,shownOrder)=>{
+        const q = QUIZ.questions[rec.index];
+        const idByOriginal = `q${rec.index+1}`;
+        const idByOrder = `q${shownOrder+1}`;
+        if(rec.type==='single'){
+          const pickedIndex = rec.picked && rec.picked.length ? rec.picked[0] : null;
+          const letter = (pickedIndex==null) ? '' : alpha[pickedIndex] ?? '';
+          const text = (pickedIndex==null) ? '' : (q.options[pickedIndex] ?? '');
+          return { idByOriginal, idByOrder, type:'single',
+            valueIndex: pickedIndex, valueNumber1: pickedIndex==null?null:(pickedIndex+1),
+            valueLetter: letter, valueText: text };
+        }
+        if(rec.type==='multiple'){
+          const arr = rec.picked||[];
+          return { idByOriginal, idByOrder, type:'multiple',
+            valueIndexes: arr, valueNumbers1: arr.map(i=>i+1),
+            valueLetters: arr.map(i=>alpha[i]), valueTexts: arr.map(i=>q.options[i]||'') };
+        }
+        if(rec.type==='order'){ return { idByOriginal, idByOrder, type:'order', value:rec.picked }; }
+        if(rec.type==='match'){ return { idByOriginal, idByOrder, type:'match', value:rec.picked }; }
+        return { idByOriginal, idByOrder, type:rec.type, value:rec.picked };
+      });
+
+      return {
+        title: QUIZ.title,
+        email,
+        startedAt,
+        finishedAt,
+        durationMin: QUIZ.durationMin,
+        totalQuestions: QUIZ.questions.length,
+        questionIdsOriginal: QUIZ.questions.map((_,i)=>`q${i+1}`),
+        questionIdsOrder: answers.map((_,i)=>`q${i+1}`),
+        orderMap, reverseOrderMap,
+        answers: normalized,
+        ua: navigator.userAgent
+      };
+    }
+
+    // Локальна перевірка (по QUIZ.answerKey)
+    function localCheck(payload){
+      const key = QUIZ.answerKey;
+      let ok = 0;
+      const breakdown = payload.answers.map(a=>{
+        if(a.type!=='single'){ return { id: a.idByOriginal, ok:true }; }
+        const original = parseInt(a.idByOriginal.slice(1),10)-1;
+        const correctIndex = key[original];
+        const isOk = (a.valueIndex === correctIndex);
+        if(isOk) ok++;
+        return { id: a.idByOriginal, ok: isOk };
+      });
+      const total = ok;
+      const percent = Math.round((ok / QUIZ.questions.length) * 100);
+      return { total, percent, breakdown };
+    }
+
+    function tickTimer(){
+      const end = +localStorage.getItem(LS.end) || 0;
+      if(!end) return;
+      const left = Math.max(0, end - Date.now());
+      const mm = String(Math.floor(left/60000)).padStart(2,'0');
+      const ss = String(Math.floor((left%60000)/1000)).padStart(2,'0');
+      timerEl.textContent = `${mm}:${ss}`;
+      if(left<=0){ idx = order.length; localStorage.setItem(LS.idx, String(idx)); render(); return; }
+      setTimeout(tickTimer, 250);
+    }
+    function timeTaken(){
+      const start = +localStorage.getItem(LS.start) || Date.now();
+      const s = Math.max(0, Math.floor((Date.now()-start)/1000));
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      return `${mm}:${ss}`;
+    }
+  </script>
+</body>
+</html>
