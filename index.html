@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Інтерактивний тест — Румунія та OMV Petrom</title>
   <style>
     :root { --bg:#0b0f19; --panel:#121829; --text:#e6e9f2; --muted:#9aa3b2; --brand:#6ea8fe; --brand-2:#22d3ee; --border:#1f2a44; }
@@ -44,7 +44,7 @@
     }
     .btn[disabled]{opacity:.6;cursor:not-allowed}
     .footer{padding:16px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
-    .hidden{display:none !important}
+    .hidden{display:none!important}
     .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
     .kpi{text-align:center;padding:14px;border:1px solid var(--border);border-radius:12px;background:#0e1526}
     .kpi b{font-size:20px;display:block}
@@ -62,7 +62,7 @@
     .warning{background:rgba(255,255,255,.03);border:1px dashed var(--border);padding:10px 12px;border-radius:12px;margin-top:10px;font-size:13px;color:var(--muted)}
     .actions{display:flex;gap:10px;align-items:center;margin:10px 0 0}
   </style>
-  <!-- Вход через Google (необязательно). Оставь как есть или удали блоки ниже. -->
+  <!-- Вхід через Google (опціонально) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -70,7 +70,7 @@
     <div class="card" id="app">
       <header>
         <div>
-          <h1>Інтерактивний тест</h1>
+          <h1>Інтерактивний тест — Румунія та OMV Petrom</h1>
           <div class="muted">Вхід через Google або вкажіть робочу пошту. 20 хвилин на проходження. Перезапуск заборонено.</div>
           <div class="progress"><i id="bar"></i></div>
         </div>
@@ -102,53 +102,49 @@
   </div>
 
   <script>
-    // ====== НАЛАШТУВАННЯ ТЕСТУ (Румунія та OMV Petrom) ======
+    // ===== НАЛАШТУВАННЯ ТЕСТУ (Румунія × OMV Petrom) =====
     const QUIZ = {
       title: "Тест про Румунію та OMV Petrom (10 питань)",
       durationMin: 20,
-      // заміни за потреби своїм вебхуком (Google Apps Script / інше):
-      webhookUrl: "https://script.google.com/macros/s/AKfycbz0ZKCEcUj6tMBIvp33L0QFlZMZ8u4R4floJi9FiIwGYOABVLt7zuf_hu50UMYAgcOJ/exec",
-
-      // Ключ правильних відповідей (0-базові індекси) — важливо: довжина = кількості питань.
-      // 1: Клаус Йоганніс; 2: Марчел Чолаку; 3: Крістіна Верчере; 4: 1956; 5: ~6 млрд €;
-      // 6: Бухарест; 7: Австрія (OMV AG); 8: Бухарестська біржа; 9: Румунський лей; 10: Бухарест.
+      // За бажанням: свій вебхук (Google Apps Script / інше). Можна лишити порожнім.
+      webhookUrl: "",
+      // УВАГА: правильний варіант у кожному питанні — ПЕРШИЙ (індекс 0)
       answerKey: [0,0,0,0,0,0,0,0,0,0],
-
       questions: [
-        { type:'single', text:'Хто є президентом Румунії (контекст тесту)?', options:[
-          'Клаус Йоганніс','Іон Ілієску','Еміль Константінеску','Траян Бесеску'
+        { type:'single', text:'Хто є чинним президентом Румунії (станом на 2025)?', options:[
+          'Нікушор Дан','Клаус Йоганніс','Дачіан Чолош','Дан Барна'
         ]},
-        { type:'single', text:'Хто очолює Уряд Румунії (прем’єр-міністр) у контексті цього тесту?', options:[
-          'Марчел Чолаку','Людовік Орбан','Дачіан Чолош','Ніколае Чуке'
+        { type:'single', text:'Хто є чинним прем’єр-міністром Румунії (2025)?', options:[
+          'Іліє Болоджан','Марчел Чолаку','Ніколае Чуке','Людовік Орбан'
         ]},
         { type:'single', text:'Хто є генеральним директором компанії OMV Petrom?', options:[
-          'Крістіна Верчере','Райнер Зеле','Альфред Штерн','Іліе Сірбу'
-        ]},
-        { type:'single', text:'У якому році (як Petrom) було засновано основу OMV Petrom?', options:[
-          '1956','1991','1997','2004'
-        ]},
-        { type:'single', text:'Яка орієнтовна ринкова капіталізація OMV Petrom у 2024 році?', options:[
-          'Близько 6 мільярдів євро','Менше 1 мільярда євро','Близько 60 мільярдів євро','Понад 100 мільярдів євро'
+          'Крістіна Верчере','Райнер Зеле','Альфред Штерн','Іліє Сірбу'
         ]},
         { type:'single', text:'Де розташована штаб-квартира OMV Petrom?', options:[
-          'Бухарест','Відень','Клуж-Напока','Констанца'
+          'Бухарест (Petrom City)','Відень','Клуж-Напока','Констанца'
+        ]},
+        { type:'single', text:'На якій біржі та під яким тикером котируються акції OMV Petrom?', options:[
+          'Бухарестська біржа (BVB), SNP','Віденська, OMV','Лондонська, OMP','Нью-Йоркська, PTR'
         ]},
         { type:'single', text:'Яка країна через OMV AG є основним акціонером OMV Petrom?', options:[
           'Австрія','Румунія','Німеччина','Франція'
         ]},
-        { type:'single', text:'На якій біржі котируються акції OMV Petrom?', options:[
-          'Бухарестська фондова біржа','Віденська біржа','Нью-Йоркська біржа','Лондонська біржа'
+        { type:'single', text:'Який найбільший морський порт Румунії?', options:[
+          'Констанца','Галац','Бреїла','Мангалія'
         ]},
         { type:'single', text:'Яка офіційна валюта Румунії?', options:[
-          'Румунський лей','Євро','Долар США','Швейцарський франк'
+          'Румунський лей (RON)','Євро','Долар США','Швейцарський франк'
         ]},
         { type:'single', text:'Яке місто є столицею Румунії?', options:[
           'Бухарест','Ясси','Тімішоара','Клуж-Напока'
+        ]},
+        { type:'single', text:'Яка основна галузь діяльності OMV Petrom?', options:[
+          'Нафтогазова (видобуток і переробка)','Банківська','ІТ-аутсорсинг','Авіабудування'
         ]}
       ]
     };
 
-    // ====== Глобал/DOM ======
+    // ===== Глобальні посилання на DOM =====
     const stage = document.getElementById('stage');
     const nextBtn = document.getElementById('nextBtn');
     const restartBtn = document.getElementById('restartBtn');
@@ -164,10 +160,16 @@
     let idx = 0;
     let answers = [];
 
-    // ====== Вхід ======
+    // ===== Вхід через Google (опційно) =====
     window.handleCredentialResponse = function(res){
-      try { const payload = parseJwt(res.credential); const email = payload.email; if(!email) throw new Error(); lockAndStart(email); }
-      catch(e){ alert('Помилка входу через Google. Можна вказати пошту вручну.'); }
+      try {
+        const payload = parseJwt(res.credential);
+        const email = payload.email;
+        if(!email) throw new Error();
+        lockAndStart(email);
+      } catch(e){
+        alert('Помилка входу через Google. Можна вказати пошту вручну.');
+      }
     };
     function parseJwt (token) {
       const base64Url = token.split('.')[1];
@@ -176,12 +178,14 @@
       return JSON.parse(jsonPayload);
     }
 
-    startBtn.addEventListener('click', () => {
+    // ===== Ручний старт по e-mail =====
+    startBtn?.addEventListener('click', () => {
       const email = (emailInput.value||'').trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { alert('Укажіть коректну робочу пошту'); return; }
       lockAndStart(email);
     });
 
+    // ===== Блокування/старт та відновлення =====
     function lockAndStart(email){
       const existingEmail = localStorage.getItem(LS.email);
       const endTs = +localStorage.getItem(LS.end) || 0;
@@ -227,6 +231,7 @@
       }
     })();
 
+    // ===== Рендер =====
     function updateProgress(){
       const total = order.length;
       statusEl.textContent = `Питання ${Math.min(idx+1,total)} із ${total}`;
@@ -245,55 +250,38 @@
       const block = document.createElement('div');
       const h = document.createElement('h2'); h.className='q-title'; h.textContent = q.text; block.appendChild(h);
       const note = document.createElement('div'); note.className='q-note muted';
-      note.textContent = (q.type==='multiple') ? 'Можна обрати кілька варіантів' : 'Оберіть один варіант';
+      note.textContent = 'Оберіть один варіант';
       block.appendChild(note);
 
       const options = document.createElement('div'); options.className='options';
-
-      if(q.type==='single' || q.type==='multiple'){
-        const isMulti = q.type==='multiple';
-        q.options.forEach((opt,i)=>{
-          const label=document.createElement('label'); label.className='opt';
-          const input=document.createElement('input'); input.type=isMulti?'checkbox':'radio'; input.name='q'; input.value=i;
-          const span=document.createElement('span'); span.textContent=opt;
-          label.appendChild(input); label.appendChild(span); options.appendChild(label);
-        });
-      }
+      q.options.forEach((opt,i)=>{
+        const label=document.createElement('label'); label.className='opt';
+        const input=document.createElement('input'); input.type='radio'; input.name='q'; input.value=i;
+        const span=document.createElement('span'); span.textContent=opt;
+        label.appendChild(input); label.appendChild(span); options.appendChild(label);
+      });
 
       block.appendChild(options); stage.appendChild(block);
 
-      if(q.type==='single'){
-        options.addEventListener('change', ()=>{ nextBtn.disabled = !options.querySelector('input:checked'); });
-      } else if(q.type==='multiple'){
-        options.addEventListener('change', ()=>{ nextBtn.disabled = options.querySelectorAll('input:checked').length === 0; });
-      } else {
-        nextBtn.disabled = false;
-      }
-
-      nextBtn.onclick = () => saveAndNext(qOriginalIndex, q, options);
+      options.addEventListener('change', ()=>{ nextBtn.disabled = !options.querySelector('input:checked'); });
+      nextBtn.onclick = () => saveAndNext(qOriginalIndex, options);
       restartBtn.onclick = () => {};
     }
 
-    function saveAndNext(originalIndex, q, options){
-      let picked;
-      if(q.type==='single'){
-        const sel = options.querySelector('input:checked'); picked = sel ? [ +sel.value ] : [];
-      } else if(q.type==='multiple'){
-        picked = [...options.querySelectorAll('input:checked')].map(i=>+i.value);
-      }
-
-      const record = { index: originalIndex, shownOrder: idx, type: q.type, picked };
+    function saveAndNext(originalIndex, options){
+      const sel = options.querySelector('input:checked');
+      const picked = sel ? [ +sel.value ] : [];
+      const record = { index: originalIndex, shownOrder: idx, type:'single', picked };
       answers[idx] = record;
       localStorage.setItem(LS.data, JSON.stringify(answers));
       idx++; localStorage.setItem(LS.idx, String(idx));
       render();
     }
 
+    // ===== Підсумок + (опційно) відправка на вебхук =====
     async function renderResult(){
       bar.style.width = '100%';
       const payload = buildPayload();
-
-      // 1) Локальна перевірка — показуємо результат одразу
       const local = localCheck(payload);
 
       stage.innerHTML = `
@@ -303,7 +291,7 @@
           <div class="kpi"><b id="pct">${local.percent}%</b><div class="muted">Відсоток</div></div>
           <div class="kpi"><b>${timeTaken()}</b><div class="muted">Час</div></div>
         </div>
-        <div class="actions">
+        <div class="actions ${QUIZ.webhookUrl ? '' : 'hidden'}">
           <div class="muted" id="sendStatus"><span class="status">Надсилання…</span></div>
           <button class="btn" id="retryBtn">Повторити відправку</button>
         </div>
@@ -314,31 +302,32 @@
 
       const rows = document.getElementById('rows');
       local.breakdown.forEach((b,i)=>{ 
-        const tr=document.createElement('tr'); 
+        const tr=document.createElement('tr');
         tr.innerHTML=`<td>${i+1}</td><td>${b.id}</td><td>${b.ok?'<span class="pill ok">вірно</span>':'<span class="pill bad">помилка</span>'}</td>`;
-        rows.appendChild(tr); 
+        rows.appendChild(tr);
       });
 
-      // 2) Відправка на сервер (у фоні)
-      const sendStatus = document.querySelector('#sendStatus .status');
-      const trySend = async () => {
-        sendStatus.className = 'status';
-        sendStatus.textContent = 'Надсилання…';
-        try {
-          const data = await sendToWebhook(payload);
-          sendStatus.classList.add('ok');
-          sendStatus.textContent = 'Надіслано організатору';
-          if(typeof data?.total === 'number' && typeof data?.percent === 'number'){
-            document.getElementById('score').textContent = `${data.total}/${QUIZ.questions.length}`;
-            document.getElementById('pct').textContent = `${data.percent}%`;
+      if(QUIZ.webhookUrl){
+        const sendStatus = document.querySelector('#sendStatus .status');
+        const trySend = async () => {
+          sendStatus.className = 'status';
+          sendStatus.textContent = 'Надсилання…';
+          try {
+            const data = await sendToWebhook(payload);
+            sendStatus.classList.add('ok');
+            sendStatus.textContent = 'Надіслано організатору';
+            if(typeof data?.total === 'number' && typeof data?.percent === 'number'){
+              document.getElementById('score').textContent = `${data.total}/${QUIZ.questions.length}`;
+              document.getElementById('pct').textContent = `${data.percent}%`;
+            }
+          } catch (e) {
+            sendStatus.classList.add('err');
+            sendStatus.textContent = 'Не надіслано (офлайн/помилка).';
           }
-        } catch (e) {
-          sendStatus.classList.add('err');
-          sendStatus.textContent = 'Не надіслано (офлайн/помилка).';
-        }
-      };
-      document.getElementById('retryBtn').onclick = trySend;
-      trySend();
+        };
+        document.getElementById('retryBtn').onclick = trySend;
+        trySend();
+      }
     }
 
     async function sendToWebhook(payload){
@@ -356,7 +345,7 @@
     }
 
     function buildPayload(){
-      const email = localStorage.getItem(LS.email);
+      const email = localStorage.getItem(LS.email) || '';
       const startedAt = +localStorage.getItem(LS.start) || Date.now();
       const finishedAt = Date.now();
       const alpha = ['a','b','c','d','e','f'];
@@ -369,21 +358,12 @@
         const q = QUIZ.questions[rec.index];
         const idByOriginal = `q${rec.index+1}`;
         const idByOrder = `q${shownOrder+1}`;
-        if(rec.type==='single'){
-          const pickedIndex = rec.picked && rec.picked.length ? rec.picked[0] : null;
-          const letter = (pickedIndex==null) ? '' : alpha[pickedIndex] ?? '';
-          const text = (pickedIndex==null) ? '' : (q.options[pickedIndex] ?? '');
-          return { idByOriginal, idByOrder, type:'single',
-            valueIndex: pickedIndex, valueNumber1: pickedIndex==null?null:(pickedIndex+1),
-            valueLetter: letter, valueText: text };
-        }
-        if(rec.type==='multiple'){
-          const arr = rec.picked||[];
-          return { idByOriginal, idByOrder, type:'multiple',
-            valueIndexes: arr, valueNumbers1: arr.map(i=>i+1),
-            valueLetters: arr.map(i=>alpha[i]), valueTexts: arr.map(i=>q.options[i]||'') };
-        }
-        return { idByOriginal, idByOrder, type:rec.type, value:rec.picked };
+        const pickedIndex = rec.picked && rec.picked.length ? rec.picked[0] : null;
+        const letter = (pickedIndex==null) ? '' : alpha[pickedIndex] ?? '';
+        const text = (pickedIndex==null) ? '' : (q.options[pickedIndex] ?? '');
+        return { idByOriginal, idByOrder, type:'single',
+          valueIndex: pickedIndex, valueNumber1: pickedIndex==null?null:(pickedIndex+1),
+          valueLetter: letter, valueText: text };
       });
 
       return {
@@ -406,7 +386,6 @@
       const key = QUIZ.answerKey;
       let ok = 0;
       const breakdown = payload.answers.map(a=>{
-        if(a.type!=='single'){ return { id: a.idByOriginal, ok:true }; }
         const original = parseInt(a.idByOriginal.slice(1),10)-1;
         const correctIndex = key[original];
         const isOk = (a.valueIndex === correctIndex);
@@ -418,6 +397,7 @@
       return { total, percent, breakdown };
     }
 
+    // ===== Таймер =====
     function tickTimer(){
       const end = +localStorage.getItem(LS.end) || 0;
       if(!end) return;
